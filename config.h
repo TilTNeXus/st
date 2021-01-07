@@ -19,6 +19,7 @@ static int borderpx = 2;
 static char *shell = "/bin/zsh";
 char *utmp = NULL;
 char *stty_args = "stty raw pass8 nl -echo -iexten -cstopb 38400";
+static const char *delete[] = {"xdotool key control+d", NULL };
 
 /* identification sequence returned in DA and DECID */
 char *vtiden = "\033[?6c";
@@ -83,46 +84,85 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* background opacity */
-unsigned int alpha = 0x99; /* 60% alpha */
+// unsigned int alpha = 0x99; /* 60% alpha */
+unsigned int alpha = 0xff; /* 100% alpha */
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
 	/* 8 normal colors */
-        "#000000", // black
-        "#ff6c6b", // red
-        "#98be65", // green
-        "#da8548", // yellow
-        "#51afef", // blue
-        "#c678dd", // magenta
-        "#5699af", // cyan
-        "#dfdfdf", // white
+  //        "#000000", // black
+  //        "#ff6c6b", // red
+  //        "#98be65", // green
+  //        "#da8548", // yellow
+  //        "#51afef", // blue
+  //        "#c678dd", // magenta
+  //        "#5699af", // cyan
+  //        "#dfdfdf", // white
+  //
+  	/* 8 bright colors */
+  //	"#5b6268", // black
+  //	"#da8548", // red
+  //	"#4db5bd", // green
+  //	"#ecbe7b", // yellow
+  //	"#3071db", // blue
+  //	"#a9a1e1", // magenta
+  //	"#46d9ff", // cyan
+  //	"#dfdfdf", // white
 
-	/* 8 bright colors */
-	"#5b6268", // black
-	"#da8548", // red
-	"#4db5bd", // green
-	"#ecbe7b", // yellow
-	"#3071db", // blue
-	"#a9a1e1", // magenta
-	"#46d9ff", // cyan
-	"#dfdfdf", // white
-
-	[255] = 0,
+  //	[255] = 0,
 
 	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
-	"#555555",
+  //	"#cccccc",
+  //	"#555555",
+
+  /* dracula theme */
+
+    /* 8 normal colors */
+  [0] = "#000000", /* black   */
+  [1] = "#ff5555", /* red     */
+  [2] = "#50fa7b", /* green   */
+  [3] = "#f1fa8c", /* yellow  */
+  [4] = "#bd93f9", /* blue    */
+  [5] = "#ff79c6", /* magenta */
+  [6] = "#8be9fd", /* cyan    */
+  [7] = "#bbbbbb", /* white   */
+
+  /* 8 bright colors */
+  [8]  = "#44475a", /* black   */
+  [9]  = "#ff5555", /* red     */
+  [10] = "#50fa7b", /* green   */
+  [11] = "#f1fa8c", /* yellow  */
+  [12] = "#bd93f9", /* blue    */
+  [13] = "#ff79c6", /* magenta */
+  [14] = "#8be9fd", /* cyan    */
+  [15] = "#ffffff", /* white   */
+
+  /* special colors */
+  [256] = "#282a36", /* background */
+  [257] = "#f8f8f2", /* foreground */
+
 };
 
 
 /*
  * Default colors (colorname index)
- * foreground, background, cursor, reverse cursor
+ * foreground, background, cursor
  */
-unsigned int defaultfg = 7;
-unsigned int defaultbg = 0;
-static unsigned int defaultcs = 256;
+// unsigned int defaultfg = 7;
+// unsigned int defaultbg = 0;
+unsigned int defaultfg = 257;
+unsigned int defaultbg = 256;
+static unsigned int defaultcs = 257;
 static unsigned int defaultrcs = 257;
+
+ /*
+ * Colors used, when the specific fg == defaultfg. So in reverse mode this
+ * will reverse too. Another logic would only make the simple feature too
+ * complex.
+ */
+unsigned int defaultitalic = 7;
+unsigned int defaultunderline = 7;
+/*
 
 /*
  * Default shape of cursor
@@ -277,7 +317,6 @@ static Key key[] = {
 	{ XK_KP_Delete,     ControlMask,    "\033[3;5~",    +1,    0},
 	{ XK_KP_Delete,     ShiftMask,      "\033[2K",      -1,    0},
 	{ XK_KP_Delete,     ShiftMask,      "\033[3;2~",    +1,    0},
-	{ XK_KP_Delete,     XK_ANY_MOD,     "\033[P",       -1,    0},
 	{ XK_KP_Delete,     XK_ANY_MOD,     "\033[3~",      +1,    0},
 	{ XK_KP_Multiply,   XK_ANY_MOD,     "\033Oj",       +2,    0},
 	{ XK_KP_Add,        XK_ANY_MOD,     "\033Ok",       +2,    0},
@@ -345,7 +384,6 @@ static Key key[] = {
 	{ XK_Delete,        ControlMask,    "\033[3;5~",    +1,    0},
 	{ XK_Delete,        ShiftMask,      "\033[2K",      -1,    0},
 	{ XK_Delete,        ShiftMask,      "\033[3;2~",    +1,    0},
-	{ XK_Delete,        XK_ANY_MOD,     "\033[P",       -1,    0},
 	{ XK_Delete,        XK_ANY_MOD,     "\033[3~",      +1,    0},
 	{ XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
 	{ XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},

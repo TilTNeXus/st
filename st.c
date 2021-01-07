@@ -2026,6 +2026,7 @@ strreset(void)
 }
 
 void
+
 sendbreak(const Arg *arg)
 {
 	if (tcsendbreak(cmdfd, 0))
